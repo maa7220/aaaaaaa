@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.validators import ValidationError
+from rest_framework.validators import ValidationError, UniqueValidator
 from .models import (Admin, User, Doctor, Nurse, Patient)
 
 
@@ -73,11 +73,11 @@ class SignUpUserSerializer(serializers.ModelSerializer):
         fields = ["email", "username", "name", "phone", 'image', 'nat_id',
                   "password", "role", "gender", "age", "specialization"]
 
-    extra_kwargs = {
-        'role': {'required': True},
-    }
+        extra_kwargs = {
+            'role': {'required': True},
+        }
 
-   def validate(self, attrs):
+    def validate(self, attrs):
         phone_exists = User.objects.filter(phone=attrs["phone"]).exists()
         nat_exists = User.objects.filter(nat_id=attrs["nat_id"]).exists()
 
