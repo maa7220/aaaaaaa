@@ -20,7 +20,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# ---------- SignUp Admin View---
+# ---------- SignUp Admin View
 class SignUpAdminView(generics.GenericAPIView):
     serializer_class = SignUpAdminSerializer
 
@@ -554,13 +554,17 @@ class PasswordView(APIView):
         data = request.data
 
         serializer = PasswordSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             password = serializer.data['password']
             email = serializer.data['email']
             user = User.objects.get(email=email)
 
             user.password = make_password(password)
             user.save()
-            print(user.password)
 
-            return Response({"message": ""}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Password Reset Successfully"}, status=status.HTTP_201_CREATED)
+        else:
+            new_error = {}
+            for field_name, field_errors in serializer.errors.items():
+                new_error[field_name] = field_errors[0]
+            return Response(new_error, status=status.HTTP_400_BAD_REQUEST)
