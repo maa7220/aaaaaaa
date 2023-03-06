@@ -20,7 +20,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# ---------- SignUp Admin View
+# ---------- SignUp Admin View---
 class SignUpAdminView(generics.GenericAPIView):
     serializer_class = SignUpAdminSerializer
 
