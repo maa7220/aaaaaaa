@@ -107,7 +107,7 @@ class SignUpUserView(generics.GenericAPIView):
             return Response(new_error, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ---------- Login View
+# ---------- Login View-
 class Login(ObtainAuthToken):
 
     def post(self, request):
