@@ -12,8 +12,10 @@ from users.permissions import IsDoctor, IsNurse
 
 
 class MedicinesView(generics.ListCreateAPIView):
-    serializer_class = MedicinesSerializer
-    queryset = Medicines.objects.all()
+    def get(self, request):
+        queryset = Medicines.objects.all()
+        serializer = MedicinesSerializer(queryset, many=True).data
+        return Response({"result": len(serializer), "data": serializer}, status=status.HTTP_200_OK)
 
 
 # ------- Details Medicines
