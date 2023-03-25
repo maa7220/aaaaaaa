@@ -1,6 +1,26 @@
 from rest_framework import serializers
-from rest_framework.validators import ValidationError, UniqueValidator
+from rest_framework.validators import ValidationError
 from .models import (Admin, User, Doctor, Nurse, Patient)
+from rest_framework.response import Response
+
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "name", "phone"]
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        phone_exists = User.objects.exclude(
+            pk=user.pk).filter(phone=attrs["phone"]).exists()
+        email_exists = User.objects.exclude(
+            pk=user.pk).filter(email=attrs["email"]).exists()
+        if phone_exists:
+            raise ValidationError({"message": "Phone has already been used"})
+        if email_exists:
+            raise ValidationError({"message": "email has already been used"})
+
+        return super().validate(attrs)
 
 
 # --------- User Serializer
@@ -208,7 +228,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
-        fields = ['id', 'name', 'image', 'disease_type', 'room_number', 'address',
+        fields = ['id', 'name', 'image',  'disease_type', 'room_number', 'address',
                   'nat_id', 'phone', 'gender', 'age', 'status', 'doctor', 'nurse']
         depth = 1
 
@@ -219,7 +239,8 @@ class PatientSerializer(serializers.ModelSerializer):
         doctor = obj.doctor.all()
         for i in list(doctor):
             data = i.user
-            doctor_list.append({"id": data.id, "username": data.username,  'phone': f'{data.phone}'})
+            doctor_list.append(
+                {"id": data.id, "username": data.username, "image": data.image.url, 'phone': f'{data.phone}'})
 
         return doctor_list
 
@@ -230,8 +251,9 @@ class PatientSerializer(serializers.ModelSerializer):
         nurse = obj.nurse.all()
         for i in nurse:
             data = i.user
-            print(data.phone)
-            nurse_list.append({"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
+            print(data.image)
+            nurse_list.append(
+                {"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
         return nurse_list
 
 
@@ -252,8 +274,8 @@ class PatientDoctorsSerializer(serializers.ModelSerializer):
         nurse = obj.nurse.all()
         for i in nurse:
             data = i.user
-            nurse_list.append({"id": data.id, "username": data.username,
-                               "image": data.image.url, 'phone': f'{data.phone}'})
+            nurse_list.append(
+                {"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
         return nurse_list
 
 
@@ -273,8 +295,8 @@ class PatientNurseSerializer(serializers.ModelSerializer):
         doctor = obj.doctor.all()
         for i in list(doctor):
             data = i.user
-            doctor_list.append({"id": data.id, "username": data.username,
-                                "image": data.image.url, 'phone': f'{data.phone}'})
+            doctor_list.append(
+                {"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
         return doctor_list
 
 
