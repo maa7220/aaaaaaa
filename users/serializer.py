@@ -240,7 +240,7 @@ class PatientSerializer(serializers.ModelSerializer):
         for i in list(doctor):
             data = i.user
             doctor_list.append(
-                {"id": data.id, "username": data.username, "image": data.image.url, 'phone': f'{data.phone}'})
+                {"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
 
         return doctor_list
 
