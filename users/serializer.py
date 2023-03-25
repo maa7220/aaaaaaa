@@ -219,8 +219,7 @@ class PatientSerializer(serializers.ModelSerializer):
         doctor = obj.doctor.all()
         for i in list(doctor):
             data = i.user
-            doctor_list.append({"id": data.id, "username": data.username,
-                                "image": data.image.url,  'phone': f'{data.phone}'})
+            doctor_list.append({"id": data.id, "username": data.username,  'phone': f'{data.phone}'})
 
         return doctor_list
 
@@ -232,8 +231,7 @@ class PatientSerializer(serializers.ModelSerializer):
         for i in nurse:
             data = i.user
             print(data.phone)
-            nurse_list.append({"id": data.id, "username": data.username,
-                               "image": data.image.url, 'phone': f'{data.phone}'})
+            nurse_list.append({"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
         return nurse_list
 
 
