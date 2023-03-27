@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "email", "username", "name", "phone", "added_by",
+        fields = ["id", "email", "username", "name", "phone", "added_by", 'address', 'status',
                   'nat_id', 'image', 'specialization', "role",  "gender", "age"]
 
 
@@ -90,7 +90,7 @@ class SignUpUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "username", "name", "phone", 'image', 'nat_id',
+        fields = ["email", "username", "name", "phone", 'image', 'nat_id', 'address', 'status',
                   "password", "role", "gender", "age", "specialization"]
 
         extra_kwargs = {
@@ -164,7 +164,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "username", "name",
+        fields = ["email", "username", "name", 'address', 'status',
                   "phone", "role", "gender", "age"]
 
         def validate(self, value):
@@ -230,7 +230,6 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = ['id', 'name', 'image',  'disease_type', 'room_number', 'address',
                   'nat_id', 'phone', 'gender', 'age', 'status', 'doctor', 'nurse']
-        depth = 1
 
     # ========= Get Doctor Information
     @staticmethod
@@ -251,7 +250,6 @@ class PatientSerializer(serializers.ModelSerializer):
         nurse = obj.nurse.all()
         for i in nurse:
             data = i.user
-            print(data.image)
             nurse_list.append(
                 {"id": data.id, "username": data.username, 'phone': f'{data.phone}'})
         return nurse_list
